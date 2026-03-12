@@ -4,7 +4,7 @@ interface Props {
   description: string;
   canonical?: string;
   ogImage?: string;
-  ogType?: 'website' | 'article';
+  ogType?: "website" | "article";
   publishedTime?: string;
   tags?: string[];
   noIndex?: boolean;
@@ -14,18 +14,20 @@ const {
   title,
   description,
   canonical,
-  ogImage = '/og-default.png',
-  ogType = 'website',
+  ogImage = "/og-default.png",
+  ogType = "website",
   publishedTime,
   tags = [],
   noIndex = false,
 } = Astro.props;
 
-const siteUrl = 'https://portfolio.iamsukosan.com';
+const siteUrl = "https://portfolio.iamsukosan.com";
 const canonicalURL = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
-const ogImageURL = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
+const ogImageURL = ogImage.startsWith("http")
+  ? ogImage
+  : `${siteUrl}${ogImage}`;
 
-const siteName = 'Sudarshan Kotian';
+const siteName = "Sudarshan Kotian";
 const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 ---
 
@@ -35,7 +37,12 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 <title>{fullTitle}</title>
 <meta name="description" content={description} />
 <link rel="canonical" href={canonicalURL} />
-<meta name="robots" content={noIndex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1'} />
+<meta
+  name="robots"
+  content={noIndex
+    ? "noindex,nofollow"
+    : "index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1"}
+/>
 <meta name="theme-color" content="#020917" />
 <meta name="author" content="Sudarshan Kotian" />
 
@@ -51,12 +58,12 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 <meta property="og:site_name" content={siteName} />
 <meta property="og:locale" content="en_US" />
 
-{ogType === 'article' && publishedTime && (
-  <meta property="article:published_time" content={publishedTime} />
-)}
-{tags.map((tag) => (
-  <meta property="article:tag" content={tag} />
-))}
+{
+  ogType === "article" && publishedTime && (
+    <meta property="article:published_time" content={publishedTime} />
+  )
+}
+{tags.map((tag) => <meta property="article:tag" content={tag} />)}
 
 <!-- Twitter / X Cards -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -68,5 +75,5 @@ const fullTitle = title === siteName ? title : `${title} — ${siteName}`;
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-<link rel="icon" type="image/svg+xml" href="/iamsukosan_favicon_svg.svg" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
