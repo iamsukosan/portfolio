@@ -1,0 +1,169 @@
+---
+title: "Production VPS Stack: Docker + Coolify Self-Hosted Infrastructure"
+description: "A hardened, self-hosted production infrastructure built on Ubuntu VPS using Docker, Coolify, Traefik, PostgreSQL, and Redis — replacing expensive PaaS platforms with a $20/month stack that handles real production traffic."
+date: 2024-09-10
+tags: ["Docker", "Coolify", "VPS", "Ubuntu", "PostgreSQL", "Redis", "Traefik"]
+featured: true
+status: completed
+---
+
+## Overview
+
+This is my reference architecture for self-hosted production infrastructure. The goal: match the ergonomics of PaaS platforms like Railway or Render — automated deploys, SSL, reverse proxy, database management — while running entirely on hardware you control, at a fraction of the cost.
+
+The stack handles multiple web apps, API services, background workers, and databases on a single VPS, with zero downtime deploys and automatic SSL via Traefik + Let's Encrypt.
+
+---
+
+## Why self-host?
+
+| | PaaS (Railway/Render) | Self-hosted (This stack) |
+|--|--|--|
+| Monthly cost | $50–200/mo | $20/mo (4GB VPS) |
+| Data sovereignty | Vendor-controlled | You own everything |
+| Customisation | Limited | Full root access |
+| Vendor lock-in | High | None |
+| Ops overhead | Near-zero | Low (once set up) |
+
+The break-even point is roughly **2 running services**. Beyond that, self-hosting is economically dominant.
+
+---
+
+## Server Specification
+
+- **Provider:** Hetzner Cloud (CX21)
+- **OS:** Ubuntu 22.04 LTS
+- **CPU:** 2 vCPU (AMD)
+- **RAM:** 4 GB
+- **Storage:** 40 GB NVMe SSD
+- **Bandwidth:** 20 TB/month
+- **Monthly cost:** €4.35
+
+---
+
+## Stack Architecture
+
+```
+VPS (Ubuntu 22.04)
+├── Docker Engine
+│   ├── Coolify (management layer)
+│   │   ├── Traefik (reverse proxy + SSL)
+│   │   ├── App containers (per project)
+│   │   └── System containers (watchtower, etc.)
+│   ├── PostgreSQL 16
+│   ├── Redis 7
+│   └── Internal Docker network (isolated)
+└── UFW Firewall
+    ├── Allow 22 (SSH — key auth only)
+    ├── Allow 80 (HTTP → Traefik redirect)
+    ├── Allow 443 (HTTPS → Traefik)
+    └── Deny all else
+```
+
+---
+
+## Initial Server Hardening
+
+Before touching Docker, I lock down the base OS. Here's the checklist:
+
+```bash
+# 1. Update & upgrade
+apt update && apt upgrade -y
+
+# 2. Create non-root user
+adduser deploy
+usermod -aG sudo deploy
+
+# 3. SSH key auth only — paste your public key
+mkdir -p /home/deploy/.ssh
+nano /home/deploy/.ssh/authorized_keys
+chmod 700 /home/deploy/.ssh
+chmod 600 /home/deploy/.ssh/authorized_keys
+
+# 4. Disable root login + password auth
+nano /etc/ssh/sshd_config
+# Set: PermitRootLogin no
+# Set: PasswordAuthentication no
+systemctl restart sshd
+
+# 5. UFW
+ufw allow 22/tcp
+ufw allow 80/tcp
+ufw allow 443/tcp
+ufw enable
+
+# 6. Fail2ban
+apt install fail2ban -y
+systemctl enable fail2ban
+```
+
+---
+
+## Coolify Setup
+
+Coolify is installed via their official one-liner. It spins up Traefik, the Coolify UI, and all required services automatically:
+
+```bash
+curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash
+```
+
+After install, Coolify is accessible on port 8000. The first thing I do is:
+
+1. Set the domain for Coolify itself (e.g. `coolify.yourdomain.com`)
+2. Enable SSL via Traefik (done from the Coolify UI)
+3. Enable 2FA on the admin account
+4. Lock port 8000 in UFW — Coolify is now only accessible through its own SSL domain
+
+---
+
+## Database Configuration
+
+PostgreSQL and Redis are deployed as Coolify-managed services. Both are **not** exposed publicly — they only accept connections from the internal Docker network.
+
+```bash
+# Verify databases are not publicly accessible
+docker ps --format "{{.Names}} {{.Ports}}" | grep -E "postgres|redis"
+# Should show NO 0.0.0.0 port bindings
+```
+
+Connection strings in app containers reference the service name directly:
+```
+postgresql://user:pass@postgres:5432/dbname
+redis://redis:6379
+```
+
+---
+
+## Deploy Workflow
+
+Every application gets a GitHub repository connected to Coolify. On push to `main`:
+
+1. Coolify detects the push via webhook
+2. Docker image is built on the VPS (no external registry needed)
+3. New container starts with health check
+4. Traefik routes traffic to new container
+5. Old container is stopped (zero downtime)
+
+---
+
+## Monitoring
+
+Currently lightweight — I use:
+- **UptimeKuma** (self-hosted, Docker) for uptime monitoring + alerting
+- **Coolify's built-in** resource usage view for per-container CPU/RAM
+- **Logwatch** for daily server digest emails
+
+Next: Grafana + Prometheus for proper metrics dashboards.
+
+---
+
+## Cost Breakdown
+
+| Component | Cost/month |
+|--|--|
+| Hetzner CX21 VPS | €4.35 |
+| Cloudflare (Free tier) | €0 |
+| Domain | ~€1 amortised |
+| **Total** | **~€5.50/month** |
+
+This stack currently runs 4 production web apps, 2 background worker services, PostgreSQL, and Redis.

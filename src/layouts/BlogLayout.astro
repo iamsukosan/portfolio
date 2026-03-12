@@ -1,0 +1,206 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags?: string[];
+  ogImage?: string;
+}
+
+const { title, description, date, tags = [], ogImage } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const isoDate = date.toISOString();
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description,
+  author: {
+    '@type': 'Person',
+    name: 'Sudarshan Kotian',
+    url: 'https://portfolio.iamsukosan.com',
+    sameAs: [
+      'https://github.com/iamsukosan',
+      'https://linkedin.com/in/iamsukosan',
+      'https://x.com/iamsukosan',
+    ],
+  },
+  datePublished: isoDate,
+  url: new URL(Astro.url.pathname, 'https://portfolio.iamsukosan.com').href,
+  keywords: tags.join(', '),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogType="article"
+  publishedTime={isoDate}
+  tags={tags}
+  ogImage={ogImage}
+  jsonLd={jsonLd}
+>
+  <main class="blog-main">
+    <div class="section-container">
+      <!-- Back link -->
+      <a href="/blog" class="back-link">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Back to Blog
+      </a>
+
+      <!-- Header -->
+      <header class="post-header animate-fade-up">
+        <div class="post-meta">
+          <time datetime={isoDate} class="post-date">{formattedDate}</time>
+          <div class="post-tags">
+            {tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+        <h1 class="post-title">{title}</h1>
+        <p class="post-desc">{description}</p>
+      </header>
+
+      <div class="divider"></div>
+
+      <!-- Content -->
+      <article class="prose prose-invert prose-lg max-w-none animate-fade-in animate-fade-up-d2">
+        <slot />
+      </article>
+
+      <!-- Footer -->
+      <div class="post-footer">
+        <div class="post-author">
+          <div class="author-avatar">SK</div>
+          <div>
+            <p class="author-name">Sudarshan Kotian</p>
+            <p class="author-handle">@iamsukosan</p>
+          </div>
+        </div>
+        <a href="/blog" class="back-link">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          More posts
+        </a>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .blog-main {
+    padding-top: 120px;
+    padding-bottom: 4rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 2.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .back-link:hover {
+    color: var(--accent-green);
+  }
+
+  .post-header {
+    margin-bottom: 2rem;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-subtle);
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .post-title {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+
+  .post-desc {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 65ch;
+    line-height: 1.65;
+  }
+
+  .post-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-default);
+  }
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .author-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-green);
+  }
+
+  .author-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .author-handle {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-subtle);
+  }
+</style>

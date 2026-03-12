@@ -1,0 +1,202 @@
+---
+const currentYear = new Date().getFullYear();
+
+const links = [
+  { label: 'GitHub',   href: 'https://github.com/iamsukosan',          external: true },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/iamsukosan',      external: true },
+  { label: 'X',        href: 'https://x.com/iamsukosan',                external: true },
+  { label: 'Email',    href: 'mailto:iamsukosan@gmail.com',             external: false },
+];
+
+const navLinks = [
+  { label: 'Work',  href: '/projects' },
+  { label: 'Blog',  href: '/blog' },
+  { label: 'About', href: '/about' },
+];
+---
+
+<footer>
+  <div class="footer-inner">
+    <!-- Top row -->
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="footer-logo">
+          <span class="bracket">[</span>sukosan<span class="bracket">]</span>
+        </a>
+        <p class="footer-tagline">
+          AI Automation &amp; DevOps Engineer<br />
+          Building intelligent systems on production infrastructure.
+        </p>
+      </div>
+
+      <div class="footer-links-group">
+        <div class="footer-col">
+          <span class="col-label">Navigation</span>
+          <ul>
+            {navLinks.map((link) => (
+              <li><a href={link.href}>{link.label}</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <span class="col-label">Connect</span>
+          <ul>
+            {links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  {...link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {currentYear} Sudarshan Kotian. Built with Astro &amp; Tailwind.
+      </p>
+      <p class="availability">
+        <span class="status-dot"></span>
+        Open to opportunities
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border-default);
+    margin-top: 6rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    align-items: start;
+  }
+
+  /* Brand */
+  .footer-brand {
+    max-width: 320px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 1rem;
+    transition: opacity 0.2s ease;
+  }
+
+  .footer-logo:hover { opacity: 0.7; }
+
+  .bracket { color: var(--accent-green); }
+
+  .footer-tagline {
+    font-size: 0.875rem;
+    color: var(--text-subtle);
+    line-height: 1.65;
+  }
+
+  /* Links groups */
+  .footer-links-group {
+    display: flex;
+    gap: 4rem;
+  }
+
+  .footer-col { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .col-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+
+  .footer-col ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .footer-col a {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .footer-col a:hover { color: var(--text-primary); }
+
+  /* Bottom */
+  .footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-default);
+    padding-top: 1.5rem;
+  }
+
+  .copyright {
+    font-size: 0.8rem;
+    color: var(--text-subtle);
+  }
+
+  .availability {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-soft);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 6px var(--accent-green);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @media (max-width: 768px) {
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+
+    .footer-links-group {
+      gap: 2.5rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  }
+</style>

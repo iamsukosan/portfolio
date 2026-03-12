@@ -1,0 +1,132 @@
+---
+title: "Building AI Automation Workflows That Actually Ship to Production"
+description: "Most AI automation demos never make it to production. Here's the engineering discipline — error handling, structured outputs, observability, and cost control — that separates a working prototype from a workflow you can actually rely on."
+date: 2024-12-03
+tags: ["AI Automation", "n8n", "Claude API", "LLM", "Production Engineering"]
+draft: false
+---
+
+There's a version of AI automation that lives exclusively in demo videos. The webhook fires, the LLM responds, the output lands perfectly formatted in a Google Sheet, everyone claps.
+
+Then you try to run it at scale. Or at 3am. Or when the input is slightly different from what you tested with. And it breaks in ways you didn't anticipate.
+
+I've built and broken enough AI automation workflows that I've developed opinions about what it actually takes to get one to production. Here's what I've learned.
+
+## The demo problem
+
+LLM responses are non-deterministic. That's not a bug — it's the feature. But it means your automation can't treat the model's output like a reliable function that returns a consistent value.
+
+Most tutorial workflows do this:
+
+```
+Webhook → LLM call → parse response text → pipe to next step
+```
+
+This works 80% of the time. The other 20% — when the model adds a preamble, uses slightly different key names, wraps output in markdown code fences, or just has a bad day — your workflow silently produces garbage or crashes.
+
+Production-grade automation needs to handle that 20%.
+
+## Forcing structured outputs
+
+The most important change you can make to any LLM automation is enforcing a strict output schema in your system prompt.
+
+Here's the pattern I use with Claude:
+
+```
+System prompt:
+You are a content processing assistant. 
+You must respond ONLY with valid JSON. No preamble, no explanation, no markdown fences.
+Your response must exactly match this schema:
+
+{
+  "title": "string",
+  "body": "string (markdown formatted)",
+  "meta_description": "string (max 160 characters)",
+  "tags": ["string"],
+  "confidence": "number (0-1)"
+}
+
+If you cannot complete the task, respond with:
+{"error": "string describing the problem", "confidence": 0}
+```
+
+Critically: **give the model an error path**. If you don't, it'll invent something. If you do, your automation can detect and route failures correctly.
+
+After the API call, validate before you trust:
+
+```javascript
+// n8n Function node
+const rawResponse = $input.first().json.choices[0].message.content;
+
+let parsed;
+try {
+  // Strip any accidental markdown fences
+  const cleaned = rawResponse.replace(/```json\n?|\n?```/g, '').trim();
+  parsed = JSON.parse(cleaned);
+} catch (e) {
+  throw new Error(`LLM returned invalid JSON: ${rawResponse.substring(0, 200)}`);
+}
+
+// Validate required fields
+const required = ['title', 'body', 'meta_description', 'tags'];
+for (const field of required) {
+  if (!parsed[field]) {
+    throw new Error(`LLM response missing required field: ${field}`);
+  }
+}
+
+return [{ json: parsed }];
+```
+
+When this throws, n8n's error handling catches it and you can route to a retry or failure path.
+
+## Error handling isn't optional
+
+Every LLM call in a production workflow needs:
+
+1. **Timeout** — LLMs can hang. Set a hard timeout at 30–45 seconds.
+2. **Retry with backoff** — Transient API errors happen. 3 retries with 2-second backoff handles 95% of them.
+3. **Failure path** — When retries are exhausted, what happens? At minimum: log the failure, alert, and don't silently drop the data.
+
+In n8n, this means:
+- Enable "Retry on Fail" on your HTTP Request node (set to 3 attempts, 2000ms interval)
+- Add an Error Trigger workflow that fires on any workflow failure
+- Route that error trigger to a Slack/Discord notification + a log entry in PostgreSQL
+
+Your failure logs should capture: the input, the raw LLM response, the error message, the timestamp, and the workflow execution ID (so you can replay it).
+
+## Cost control
+
+Claude API calls at scale add up. Here's how I keep costs predictable:
+
+**Cache identical or near-identical prompts.** If you're processing similar inputs (e.g. product descriptions in the same category), there's often significant prompt overlap. Redis works well for this — hash the prompt, check the cache, skip the API call if you have a recent result.
+
+**Right-size the model.** Claude 3 Haiku is 20x cheaper than Claude 3.5 Sonnet and handles routine extraction and classification tasks fine. Reserve Sonnet for tasks that genuinely need it (complex reasoning, nuanced writing). Route based on task type, not a one-size-fits-all model selection.
+
+**Set token budgets.** In your system prompt: "Your response must be under 800 tokens." This prevents the model from being unnecessarily verbose and keeps costs predictable.
+
+**Log token usage per execution.** The Claude API returns token counts in the response object. Log `prompt_tokens` and `completion_tokens` per workflow run. After a week, you'll know your real cost per execution and can optimise accordingly.
+
+## Observability
+
+You can't debug what you can't see. Every production AI workflow should log:
+
+- Input (or a hash of it, if it's sensitive)
+- Model called + version
+- Token usage
+- Latency (API call duration)
+- Output schema validation result (pass/fail)
+- Downstream system result (did the publish succeed?)
+- Total execution time
+
+I dump all of this into a PostgreSQL table with one row per workflow execution. A simple Grafana dashboard on top shows you success rates, latency percentiles, cost trends, and failure patterns over time.
+
+When something breaks at 3am, you open the dashboard, find the execution ID, query the logs table, and you know exactly what happened within two minutes.
+
+## The mental model that changed everything
+
+Treat LLM calls like network calls to an external API that you don't control. You wouldn't ship a feature that makes an HTTP request with no timeout, no retry, and no error handling. Apply the same discipline here.
+
+The model is non-deterministic but it's not unpredictable in aggregate. Test your prompts on a representative sample of real inputs before deploying. Build the error handling before you need it. Log everything from day one.
+
+The workflows that actually run in production aren't the clever ones — they're the boring ones that handle failure gracefully and tell you exactly what happened when something goes wrong.

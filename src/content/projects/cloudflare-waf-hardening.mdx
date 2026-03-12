@@ -1,0 +1,188 @@
+---
+title: "Cloudflare WAF & Security Hardening for Production Web Apps"
+description: "A comprehensive Cloudflare security architecture for self-hosted web applications — covering WAF rules, bot management, rate limiting, DNS hardening, and Zero Trust access — reducing malicious traffic by over 95%."
+date: 2024-07-22
+tags: ["Cloudflare", "WAF", "Security", "DNS", "Zero Trust", "Infrastructure"]
+featured: false
+status: completed
+---
+
+## Overview
+
+This project documents the Cloudflare security layer I built and operate for production web properties. The architecture treats security as infrastructure — configured as code, version-controlled, and layered in defence-depth. Not a one-click "enable WAF" setup.
+
+After implementation, malicious and bot traffic dropped from ~40% of all requests to under 2%.
+
+---
+
+## Why Cloudflare, not a self-hosted WAF?
+
+Options like ModSecurity, Nginx rate limiting, or Fail2ban are valid. But Cloudflare's network sits at the edge — threats are terminated before they ever reach your origin. When a DDoS event hits, your VPS CPU isn't even involved.
+
+The free and Pro tiers cover the vast majority of real-world threat scenarios. For the price, there's no competing solution.
+
+---
+
+## DNS Hardening
+
+The foundation. Before anything else, lock down DNS.
+
+### SPF / DKIM / DMARC (email authentication)
+
+```
+# SPF — limit who can send email for your domain
+v=spf1 include:_spf.google.com ~all
+
+# DMARC — policy for failing messages
+_dmarc.yourdomain.com TXT "v=DMARC1; p=reject; rua=mailto:dmarc@yourdomain.com"
+```
+
+### DNSSEC
+
+Enable in Cloudflare dashboard → DNS → DNSSEC. Cloudflare handles key rotation. This prevents DNS spoofing and cache poisoning attacks.
+
+### CAA Records
+
+Restrict which Certificate Authorities can issue SSL certs for your domain:
+
+```
+yourdomain.com CAA 0 issue "letsencrypt.org"
+yourdomain.com CAA 0 issue "comodoca.com"
+yourdomain.com CAA 0 iodef "mailto:security@yourdomain.com"
+```
+
+---
+
+## WAF Configuration
+
+### Managed Rules (first layer)
+
+Enable:
+- **Cloudflare Managed Ruleset** — covers OWASP Top 10 and common CVEs
+- **Cloudflare OWASP Core Ruleset** — paranoia level 2 is a good balance for most apps
+
+### Custom WAF Rules (second layer)
+
+These are the rules I've found most effective in production:
+
+**Block bad bots by ASN:**
+```
+(ip.geoip.asnum in {14061 16276 24940} and not cf.client.bot)
+```
+This blocks Hetzner, OVH, and Contabo ASNs — major sources of scrapers and scanners. Whitelist your own VPS IPs first.
+
+**Block common scanner paths:**
+```
+(http.request.uri.path contains "/.env" or 
+ http.request.uri.path contains "/wp-login.php" or 
+ http.request.uri.path contains "/phpmyadmin" or 
+ http.request.uri.path contains "/.git/config" or
+ http.request.uri.path contains "/xmlrpc.php")
+```
+Action: `Block`
+
+**Challenge suspicious user agents:**
+```
+(http.user_agent contains "python-requests" or 
+ http.user_agent contains "curl/" or 
+ http.user_agent contains "Go-http-client") 
+and not cf.verified_bot_category in {"Search Engine Crawler"}
+```
+Action: `Managed Challenge` (JS challenge, not hard block — avoids false positives)
+
+**Block empty user agents:**
+```
+(http.user_agent eq "")
+```
+Action: `Block` — no legitimate browser sends an empty UA.
+
+---
+
+## Rate Limiting
+
+### API endpoint protection
+
+```
+Rule: /api/* 
+Requests: 60 per minute per IP
+Action: Block (429 response)
+```
+
+### Login endpoint protection
+
+```
+Rule: /login, /admin, /wp-admin
+Requests: 10 per minute per IP
+Action: Managed Challenge
+```
+
+### Global rate limit (DDoS mitigation)
+
+```
+Rule: /* 
+Requests: 500 per minute per IP
+Action: Block
+```
+
+---
+
+## Bot Management
+
+On the **Pro plan**, Cloudflare's Bot Score is available. I use this rule to challenge likely bots without blocking legitimate traffic:
+
+```
+(cf.bot_management.score lt 30 and 
+ not cf.bot_management.verified_bot and 
+ not cf.client.bot)
+```
+Action: `Managed Challenge`
+
+Score < 30 = almost certainly automated. Score 30–60 = grey zone (challenge). Score > 60 = likely human.
+
+---
+
+## Zero Trust Access (for internal tooling)
+
+Admin interfaces (Coolify, n8n, Grafana, etc.) should never be publicly accessible — even if password-protected. Cloudflare Zero Trust (free for up to 50 users) puts an identity layer in front of them.
+
+```
+Application: coolify.yourdomain.com
+Policy: Allow if email ends in @yourdomain.com
+Auth method: One-time PIN (OTP via email)
+```
+
+The app is invisible to the public internet. The Cloudflare tunnel handles routing — port 8000 on your VPS is never exposed.
+
+---
+
+## SSL/TLS Configuration
+
+```
+Mode: Full (strict)       ← Not just "Full" — strict validates origin cert
+Min TLS version: 1.2
+TLS 1.3: Enabled
+HSTS: max-age=31536000; includeSubDomains; preload
+```
+
+Always-use-HTTPS and HSTS preload are enabled. This eliminates the SSL stripping attack vector entirely.
+
+---
+
+## Results (30-day sample)
+
+| Metric | Value |
+|--------|-------|
+| Total requests | 2.1M |
+| Blocked by WAF | 840K (40%) |
+| Bot traffic blocked | 350K (17%) |
+| Rate limited | 120K (5.7%) |
+| Legitimate traffic | 790K (37.6%) |
+| Origin requests (VPS saw) | 790K — **62% reduction in origin load** |
+
+---
+
+## What's next
+
+- Cloudflare Workers for edge-level auth validation (JWT verification before hitting origin)
+- API shield for schema validation on all API endpoints
+- Turnstile (Cloudflare's CAPTCHA) on public forms

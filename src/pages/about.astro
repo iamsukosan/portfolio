@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const timeline = [
+  {
+    period: '2024 – Present',
+    role: 'AI Automation & DevOps Engineer',
+    desc: 'Designing and deploying AI-powered automation workflows using n8n and Claude API. Building self-hosted infrastructure with Docker, Coolify, and Cloudflare. Engineering end-to-end pipelines from intelligent trigger to production output.',
+  },
+  {
+    period: '2022 – 2024',
+    role: 'Server & Infrastructure Engineer',
+    desc: 'Managed VPS environments on Ubuntu and AlmaLinux. Implemented Cloudflare WAF rules, CDN configurations, and DNS hardening. Containerised web workloads with Docker. Moved teams from shared hosting to self-managed infrastructure.',
+  },
+  {
+    period: '2020 – 2022',
+    role: 'WordPress & Technical SEO Specialist',
+    desc: 'Built and optimised WordPress sites for Core Web Vitals and organic search performance. Worked on technical SEO audits, structured data, and content systems at scale. Bridged the gap between content strategy and engineering.',
+  },
+  {
+    period: '2018 – 2020',
+    role: 'Content Writer & Digital Marketer',
+    desc: 'Started in long-form content writing and digital marketing. Developed a systems mindset early — automating content workflows, tracking pipelines, and researching technical subjects that eventually pulled me toward engineering.',
+  },
+];
+
+const skills = [
+  {
+    category: 'AI & Automation',
+    items: ['n8n', 'Claude API (Anthropic)', 'LLM Prompt Engineering', 'Workflow Automation', 'API Integration'],
+  },
+  {
+    category: 'Infrastructure & DevOps',
+    items: ['Docker', 'Coolify', 'VPS (Ubuntu / AlmaLinux)', 'Nginx', 'Redis', 'PostgreSQL'],
+  },
+  {
+    category: 'Cloud & Security',
+    items: ['Cloudflare CDN', 'Cloudflare WAF', 'Cloudflare DNS', 'SSL/TLS', 'Zero Trust Networking'],
+  },
+  {
+    category: 'Web Engineering',
+    items: ['Next.js', 'Astro', 'WordPress', 'Technical SEO', 'Core Web Vitals', 'GitHub'],
+  },
+];
+
+const values = [
+  { label: 'Self-hosted everything', desc: 'If it can run on your own VPS, it should.' },
+  { label: 'Automation over repetition', desc: 'Any task done twice is a candidate for a workflow.' },
+  { label: 'Minimal attack surface', desc: 'Security is architecture, not an afterthought.' },
+  { label: 'Ship > perfect', desc: 'Production teaches you things staging never will.' },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="AI Automation & DevOps Engineer. My journey from content writing to WordPress/SEO to VPS infrastructure to AI automation systems."
+>
+  <main class="about-main">
+    <div class="section-container">
+
+      <!-- ── INTRO ─────────────────────────────── -->
+      <header class="about-header animate-fade-up">
+        <p class="section-eyebrow">About me</p>
+        <h1 class="about-h1">
+          Engineer by craft,<br />
+          <span class="accent-text">automator by instinct.</span>
+        </h1>
+        <div class="about-bio">
+          <p>
+            I started in content writing — learning how information moves, how systems need to scale,
+            and how most digital work is unnecessarily manual. That curiosity pulled me into
+            WordPress and Technical SEO, then deeper into VPS management, Docker, and
+            Cloudflare infrastructure.
+          </p>
+          <p>
+            Now I design and build <strong>AI automation systems</strong> and <strong>DevOps pipelines</strong> —
+            connecting intelligent workflows to production-grade infrastructure. I work at the
+            intersection of LLMs, automation tooling (n8n, Claude API), and hardened Linux server
+            environments. Every layer of the stack is intentional.
+          </p>
+          <p>
+            Based remotely. Open to full-time roles and technical contracts in AI automation,
+            DevOps/infrastructure engineering, and marketing operations engineering.
+          </p>
+        </div>
+
+        <!-- Social links -->
+        <div class="social-links">
+          <a href="https://github.com/iamsukosan" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+          </a>
+          <a href="https://linkedin.com/in/iamsukosan" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+            LinkedIn
+          </a>
+          <a href="https://x.com/iamsukosan" target="_blank" rel="noopener noreferrer" class="social-link">
+            <svg width="15" height="15" viewBox="0 0 300 300" fill="currentColor" aria-hidden="true">
+              <path d="M178.57 127.15L290.27 0h-26.46l-97.03 110.38L89.34 0H0l117.13 166.93L0 300.1h26.46l102.4-116.59L177.74 300.1H267L178.57 127.15zm-36.06 41.05l-11.87-16.63L36.16 19.54h40.69l76.2 106.85 11.87 16.63 99.09 138.83h-40.69l-80.81-113.65z"/>
+            </svg>
+            X / Twitter
+          </a>
+          <a href="mailto:iamsukosan@gmail.com" class="social-link">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+            </svg>
+            Email
+          </a>
+        </div>
+      </header>
+
+      <div class="divider"></div>
+
+      <!-- ── TIMELINE ──────────────────────────── -->
+      <section class="timeline-section animate-fade-up animate-fade-up-d1">
+        <h2 class="section-label">Career Timeline</h2>
+        <div class="timeline">
+          {timeline.map((item, i) => (
+            <div class="timeline-item">
+              <div class="timeline-marker">
+                <div class="timeline-dot"></div>
+                {i < timeline.length - 1 && <div class="timeline-line"></div>}
+              </div>
+              <div class="timeline-content glass-card">
+                <span class="timeline-period">{item.period}</span>
+                <h3 class="timeline-role">{item.role}</h3>
+                <p class="timeline-desc">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── SKILLS ────────────────────────────── -->
+      <section class="skills-section animate-fade-up animate-fade-up-d2">
+        <h2 class="section-label">Skills & Stack</h2>
+        <div class="skills-grid">
+          {skills.map((group) => (
+            <div class="skill-group glass-card">
+              <div class="skill-group-inner">
+                <h3 class="skill-category">{group.category}</h3>
+                <ul class="skill-list">
+                  {group.items.map((item) => (
+                    <li class="skill-item">
+                      <span class="skill-dot">▸</span>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── VALUES ────────────────────────────── -->
+      <section class="values-section animate-fade-up animate-fade-up-d3">
+        <h2 class="section-label">How I think</h2>
+        <div class="values-grid">
+          {values.map((v) => (
+            <div class="value-card glass-card">
+              <div class="value-inner">
+                <h3 class="value-label">{v.label}</h3>
+                <p class="value-desc">{v.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .about-main {
+    padding-top: 120px;
+    padding-bottom: 4rem;
+  }
+
+  /* Header */
+  .about-header {
+    max-width: 720px;
+    margin-bottom: 3rem;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 1rem;
+  }
+
+  .about-h1 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+
+  .accent-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(135deg, #39ff14 0%, #00ff88 60%);
+  }
+
+  .about-bio {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+    margin-bottom: 2rem;
+  }
+
+  .about-bio p {
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+    max-width: 68ch;
+  }
+
+  .about-bio strong {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* Social links */
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border-default);
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .social-link:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  /* Section label */
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 2rem;
+  }
+
+  /* Timeline */
+  .timeline-section { margin-bottom: 1rem; }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 1.25rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 1.4rem;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 8px rgba(57, 255, 20, 0.5);
+    flex-shrink: 0;
+  }
+
+  .timeline-line {
+    flex: 1;
+    width: 1px;
+    background: var(--border-default);
+    margin-top: 8px;
+    min-height: 2rem;
+  }
+
+  .timeline-content {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .timeline-period {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--accent-green);
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 0.4rem;
+  }
+
+  .timeline-role {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6rem;
+    color: var(--text-primary);
+  }
+
+  .timeline-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* Skills */
+  .skills-section { margin-bottom: 1rem; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1rem;
+  }
+
+  .skill-group-inner {
+    padding: 1.5rem;
+  }
+
+  .skill-category {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 1rem;
+  }
+
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .skill-dot {
+    color: var(--accent-green);
+    font-size: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  /* Values */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .value-inner {
+    padding: 1.5rem;
+  }
+
+  .value-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .value-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 640px) {
+    .about-main { padding-top: 100px; }
+    .timeline-item { grid-template-columns: 20px 1fr; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .values-grid { grid-template-columns: 1fr; }
+  }
+</style>

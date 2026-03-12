@@ -1,0 +1,118 @@
+---
+title: "AI Content Workflow: n8n + Claude API Automation"
+description: "An end-to-end content automation pipeline using n8n workflows and the Claude API — ingesting raw inputs, generating structured content, and publishing to production systems without human intervention."
+date: 2024-11-15
+tags: ["n8n", "Claude API", "AI Automation", "Workflow", "Self-hosted"]
+featured: true
+status: completed
+---
+
+## Overview
+
+This project is an end-to-end AI-powered automation pipeline that eliminates manual content operations entirely. Built on a self-hosted n8n instance running in Docker, the workflow receives inputs via webhook, processes them through the Claude API (using Claude 3.5 Sonnet), and routes structured outputs to the correct downstream systems — all without human intervention.
+
+The entire stack runs on a single VPS, behind Cloudflare's proxy layer for security and DDoS protection.
+
+---
+
+## The Problem
+
+Manual content workflows are high-friction and don't scale. A typical process looks like: receive a brief → write content → format it → run QA → publish → distribute. Every step is a handoff point that introduces delay, inconsistency, and human error.
+
+The goal: collapse this entire sequence into a single trigger → publish cycle.
+
+---
+
+## Architecture
+
+```
+Webhook Trigger
+  └── n8n Workflow (self-hosted Docker)
+        ├── Input validation & preprocessing
+        ├── Claude API call (claude-3-5-sonnet)
+        │     ├── System prompt: role + output schema
+        │     └── User prompt: dynamic per request
+        ├── Response parsing (JSON extraction)
+        ├── Conditional routing (content type)
+        │     ├── Blog post → WordPress REST API
+        │     ├── Social content → Buffer API
+        │     └── Structured data → PostgreSQL
+        └── Slack notification (success/failure)
+```
+
+---
+
+## Key Engineering Decisions
+
+### Self-hosted n8n over cloud
+Running n8n on your own VPS costs roughly **$10–20/month** compared to cloud tiers at $50+/month. More importantly, all workflow logic, credentials, and data stay on infrastructure you control.
+
+### Structured outputs from Claude
+The system prompt enforces a strict JSON schema. Claude is instructed to respond **only** with valid JSON matching the expected shape. A Node.js function node in n8n parses the response and throws a hard error if the structure doesn't validate — triggering a retry path.
+
+```json
+{
+  "title": "string",
+  "body": "string (markdown)",
+  "meta_description": "string (max 160 chars)",
+  "tags": ["string"],
+  "publish_status": "draft | publish"
+}
+```
+
+### Error handling & retry logic
+n8n supports native retry on error at the node level. The Claude API call is configured with:
+- **3 retries** with 2-second backoff
+- Hard timeout at 30 seconds
+- On final failure: error is logged to PostgreSQL, Slack alert fired
+
+---
+
+## Results
+
+| Metric | Before | After |
+|--------|--------|-------|
+| Time per content piece | 45–90 min | < 60 seconds |
+| Consistency score | Variable | Deterministic (schema-validated) |
+| Monthly ops cost | ~$200/mo (labour) | ~$15/mo (VPS + API) |
+| Human touchpoints | 5–7 | 0 (for standard content) |
+
+---
+
+## Deployment
+
+The full stack is containerised with Docker Compose and managed via Coolify on a 2-vCPU Ubuntu VPS.
+
+```yaml
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASS}
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_DATABASE=n8n
+    volumes:
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=n8n
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASS}
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+```
+
+---
+
+## What I'd change next
+
+- Add a human-in-the-loop review step for high-visibility content (flagging via confidence score from Claude)
+- Switch Claude calls to use the Batches API for bulk jobs to reduce cost by ~50%
+- Add Redis caching for identical or near-duplicate prompts

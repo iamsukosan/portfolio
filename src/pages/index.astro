@@ -1,0 +1,689 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const featuredProjects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const latestPosts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 2);
+
+const stack = [
+  { label: 'n8n',           icon: '⚡' },
+  { label: 'Claude API',    icon: '🧠' },
+  { label: 'Docker',        icon: '🐳' },
+  { label: 'Coolify',       icon: '🚀' },
+  { label: 'Cloudflare',    icon: '☁️' },
+  { label: 'PostgreSQL',    icon: '🐘' },
+  { label: 'Redis',         icon: '🔴' },
+  { label: 'Next.js',       icon: '▲' },
+  { label: 'VPS/Ubuntu',    icon: '🖥️' },
+  { label: 'GitHub',        icon: '🐙' },
+  { label: 'WordPress',     icon: '📝' },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Sudarshan Kotian',
+  alternateName: 'iamsukosan',
+  url: 'https://portfolio.iamsukosan.com',
+  email: 'iamsukosan@gmail.com',
+  jobTitle: 'AI Automation & DevOps Engineer',
+  sameAs: [
+    'https://github.com/iamsukosan',
+    'https://linkedin.com/in/iamsukosan',
+    'https://x.com/iamsukosan',
+  ],
+  knowsAbout: [
+    'AI Automation',
+    'DevOps',
+    'Docker',
+    'Cloudflare',
+    'n8n',
+    'Claude API',
+    'VPS Management',
+    'Infrastructure Engineering',
+  ],
+};
+---
+
+<BaseLayout
+  title="Sudarshan Kotian"
+  description="AI Automation & DevOps Engineer. I design and build AI automation systems and DevOps pipelines — connecting intelligent workflows to production-grade infrastructure."
+  jsonLd={jsonLd}
+>
+  <!-- ================================================
+       HERO
+       ================================================ -->
+  <section class="hero">
+    <!-- Ambient glow -->
+    <div class="hero-glow" aria-hidden="true"></div>
+
+    <div class="section-container hero-inner">
+      <!-- Status badge -->
+      <div class="status-badge animate-fade-up">
+        <span class="status-dot"></span>
+        <span>Open to opportunities</span>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="hero-h1 animate-fade-up animate-fade-up-d1">
+        AI Automation &amp;<br />
+        <span class="hero-h1-accent">DevOps Engineer</span>
+      </h1>
+
+      <!-- Sub-heading -->
+      <p class="hero-sub animate-fade-up animate-fade-up-d2">
+        I automate everything so<br class="hide-mobile" /> humans don't have to.
+      </p>
+
+      <!-- Description -->
+      <p class="hero-desc animate-fade-up animate-fade-up-d3">
+        Building intelligent automation workflows and hardened infrastructure —
+        from AI-powered pipelines with <span class="text-accent">Claude API</span> and
+        <span class="text-accent">n8n</span> to production-grade
+        <span class="text-accent">Docker + Coolify</span> deployments and
+        <span class="text-accent">Cloudflare</span> security layers.
+      </p>
+
+      <!-- CTAs -->
+      <div class="hero-cta animate-fade-up animate-fade-up-d4">
+        <a href="/projects" class="btn-primary">
+          View my work
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="mailto:iamsukosan@gmail.com" class="btn-secondary">
+          Get in touch
+        </a>
+      </div>
+
+      <!-- Stack pills -->
+      <div class="stack-row animate-fade-up animate-fade-up-d5">
+        <span class="stack-label">Stack:</span>
+        <div class="stack-pills">
+          {stack.map((item) => (
+            <span class="stack-pill">{item.label}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       FEATURED PROJECTS
+       ================================================ -->
+  <section class="projects-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div>
+          <p class="section-eyebrow">Selected work</p>
+          <h2 class="section-title">Featured Projects</h2>
+        </div>
+        <a href="/projects" class="section-link">
+          View all
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="projects-grid">
+        {featuredProjects.map((project, i) => (
+          <a href={`/projects/${project.slug}`} class="project-card glass-card">
+            <div class="card-inner">
+              <div class="card-top">
+                <div class="card-tags">
+                  {project.data.tags.slice(0, 3).map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="card-arrow" aria-hidden="true">
+                  <path d="M4 16L16 4M16 4H7M16 4V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+
+              <div class="card-body">
+                <h3 class="card-title">{project.data.title}</h3>
+                <p class="card-desc">{project.data.description}</p>
+              </div>
+
+              <div class="card-footer">
+                <time class="card-date">
+                  {project.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
+                </time>
+                <span class={`card-status status-${project.data.status}`}>
+                  {project.data.status}
+                </span>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       LATEST POSTS
+       ================================================ -->
+  <section class="blog-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div>
+          <p class="section-eyebrow">Writing</p>
+          <h2 class="section-title">Latest Posts</h2>
+        </div>
+        <a href="/blog" class="section-link">
+          View all
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="posts-list">
+        {latestPosts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="post-row glass-card">
+            <div class="post-row-inner">
+              <div class="post-row-meta">
+                <time class="post-date">
+                  {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                </time>
+                <div class="post-tags-mini">
+                  {post.data.tags.slice(0, 2).map((tag) => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              </div>
+              <h3 class="post-title">{post.data.title}</h3>
+              <p class="post-excerpt">{post.data.description}</p>
+            </div>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="post-arrow" aria-hidden="true">
+              <path d="M4 16L16 4M16 4H7M16 4V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================
+       CTA STRIP
+       ================================================ -->
+  <section class="cta-section">
+    <div class="section-container">
+      <div class="cta-card glass-card">
+        <div class="cta-card-inner">
+          <div class="cta-glow" aria-hidden="true"></div>
+          <h2 class="cta-title">Let's build something intelligent.</h2>
+          <p class="cta-text">
+            Open to full-time roles and freelance contracts in AI automation,
+            DevOps engineering, and infrastructure architecture.
+          </p>
+          <div class="cta-buttons">
+            <a href="mailto:iamsukosan@gmail.com" class="btn-primary">
+              iamsukosan@gmail.com
+            </a>
+            <a href="https://linkedin.com/in/iamsukosan" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+              LinkedIn
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── HERO ────────────────────────────────────── */
+  .hero {
+    position: relative;
+    padding-top: 140px;
+    padding-bottom: 5rem;
+    overflow: hidden;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -10%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 900px;
+    height: 500px;
+    background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(57, 255, 20, 0.13) 0%, transparent 70%);
+    pointer-events: none;
+    animation: glowPulse 4s ease-in-out infinite;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+    max-width: 780px;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-soft);
+    background: rgba(57, 255, 20, 0.07);
+    border: 1px solid rgba(57, 255, 20, 0.2);
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent-green);
+    box-shadow: 0 0 6px var(--accent-green);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  .hero-h1 {
+    font-size: clamp(2.6rem, 6.5vw, 5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    color: #ffffff;
+  }
+
+  .hero-h1-accent {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(135deg, #39ff14 0%, #00ff88 60%, #00d4ff 100%);
+  }
+
+  .hero-sub {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 2.5vw, 1.65rem);
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+  }
+
+  .hero-desc {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 58ch;
+    line-height: 1.75;
+  }
+
+  /* CTAs */
+  .hero-cta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #020917;
+    background: var(--accent-green);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
+    transition: box-shadow 0.25s ease, transform 0.2s ease, background 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background: #4fff2d;
+    box-shadow: 0 0 36px rgba(57, 255, 20, 0.5);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border-default);
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  /* Stack pills */
+  .stack-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  .stack-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-subtle);
+    letter-spacing: 0.08em;
+    flex-shrink: 0;
+  }
+
+  .stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .stack-pill {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-subtle);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .stack-pill:hover {
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  /* ── SECTION SHARED ────────────────────────────── */
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-green);
+    margin-bottom: 0.4rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .section-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .section-link:hover { color: var(--accent-green); }
+
+  /* ── PROJECTS ─────────────────────────────────── */
+  .projects-section {
+    padding: 3rem 0;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .project-card {
+    display: block;
+    text-decoration: none;
+  }
+
+  .card-inner {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    height: 100%;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .card-arrow {
+    color: var(--text-subtle);
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .project-card:hover .card-arrow {
+    color: var(--accent-green);
+    transform: translate(2px, -2px);
+  }
+
+  .card-body { flex: 1; }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+
+  .project-card:hover .card-title { color: var(--accent-soft); }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-date {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-subtle);
+  }
+
+  .card-status {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    text-transform: capitalize;
+  }
+
+  .status-completed {
+    color: var(--accent-soft);
+    background: rgba(0, 255, 136, 0.08);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+  }
+
+  .status-in-progress {
+    color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+  }
+
+  /* ── BLOG ──────────────────────────────────────── */
+  .blog-section {
+    padding: 3rem 0;
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    text-decoration: none;
+    padding: 1.5rem;
+  }
+
+  .post-row-inner { flex: 1; }
+
+  .post-row-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-subtle);
+  }
+
+  .post-tags-mini {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .post-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    transition: color 0.2s ease;
+  }
+
+  .post-row:hover .post-title { color: var(--accent-soft); }
+
+  .post-excerpt {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .post-arrow {
+    color: var(--text-subtle);
+    flex-shrink: 0;
+    transition: color 0.2s ease, transform 0.2s ease;
+  }
+
+  .post-row:hover .post-arrow {
+    color: var(--accent-green);
+    transform: translate(2px, -2px);
+  }
+
+  /* ── CTA ────────────────────────────────────────── */
+  .cta-section {
+    padding: 3rem 0;
+  }
+
+  .cta-card {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .cta-card-inner {
+    position: relative;
+    z-index: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .cta-glow {
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(ellipse, rgba(57, 255, 20, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-title {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    max-width: 20ch;
+  }
+
+  .cta-text {
+    font-size: 0.975rem;
+    color: var(--text-muted);
+    max-width: 52ch;
+    line-height: 1.7;
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .hide-mobile { display: inline; }
+
+  @media (max-width: 640px) {
+    .hide-mobile { display: none; }
+    .hero { padding-top: 110px; }
+    .hero-h1 { font-size: 2.4rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .cta-card-inner { padding: 2rem 1.5rem; }
+    .section-header { align-items: flex-start; flex-direction: column; }
+  }
+</style>

@@ -1,0 +1,82 @@
+---
+title: "Why I Moved Everything to a $5 VPS (And Never Looked Back)"
+description: "A practical breakdown of migrating from PaaS platforms to a self-hosted VPS stack with Docker, Coolify, and Cloudflare — covering real costs, tradeoffs, and the setup that now runs four production apps for under €6/month."
+date: 2024-10-08
+tags: ["DevOps", "Self-hosting", "Docker", "VPS", "Coolify"]
+draft: false
+---
+
+About two years ago I was paying somewhere north of $120/month across Heroku, Railway, and a handful of managed database instances.
+
+Today I run four production web applications, two background worker services, a PostgreSQL database, Redis, and my own n8n instance — all on a single Hetzner VPS that costs **€4.35/month**.
+
+Here's exactly how I got there and why I think it's the right call for most independent engineers and small teams.
+
+## The problem with PaaS platforms
+
+PaaS platforms are a trap. Not a malicious one — they're genuinely useful, especially early on. Heroku's one-line deploy changed how we think about shipping software. Railway is beautifully designed. I don't have anything against them.
+
+But the economics don't hold up once you have more than two or three services running.
+
+Let me put actual numbers to this. A basic Railway setup for a mid-weight web app with a Postgres database runs around $20–30/month. Two apps with two databases: $60+. Add a background worker, a Redis instance, a staging environment — you're at $150/month before you've shipped anything particularly complex.
+
+Meanwhile, a Hetzner CX21 (2 vCPU, 4GB RAM) costs €4.35/month and will handle that entire workload comfortably.
+
+The break-even point is roughly **two services**. Beyond that, self-hosting is economically dominant in almost every scenario.
+
+## "But the ops overhead..."
+
+This is the real objection. And it's fair — there's genuine effort involved in running your own infrastructure. You're responsible for server patching, backups, SSL renewal, monitoring.
+
+But here's what's changed: **Coolify**.
+
+Coolify is an open-source PaaS you self-host. It handles:
+- Docker-based deployments from GitHub (push-to-deploy)
+- Traefik reverse proxy with automatic SSL
+- Database management (Postgres, MySQL, Redis, MongoDB)
+- Service monitoring and resource graphs
+- Backup scheduling
+
+The UI genuinely rivals Railway's. Once it's running, deploying a new app is `git push` → it's live. SSL is auto-provisioned. Traefik handles routing.
+
+The ops overhead is about **30–60 minutes of initial setup**. After that, it's closer to the PaaS experience than most people expect.
+
+## My actual setup
+
+The VPS itself runs Ubuntu 22.04. The only packages installed at the OS level are Docker, UFW (firewall), and Fail2ban.
+
+Everything else runs in containers managed by Coolify:
+
+```
+Coolify (management)
+Traefik (reverse proxy + SSL)
+PostgreSQL 16
+Redis 7
+n8n (automation)
+App 1 (Next.js)
+App 2 (Node.js API)
+App 3 (Static site)
+App 4 (WordPress)
+```
+
+All apps connect to Postgres and Redis via the internal Docker network — databases are never publicly exposed. UFW only allows ports 22, 80, and 443 from the public internet.
+
+Cloudflare sits in front of everything: CDN, WAF, DDoS mitigation. The VPS's real IP is hidden. Cloudflare's edge handles ~60% of requests before they ever reach my server.
+
+## The real tradeoffs
+
+I want to be honest about what you're giving up:
+
+**Managed databases.** Self-hosted Postgres is fine for most workloads, but if you need point-in-time recovery, read replicas, or automatic failover, managed databases (RDS, Neon, PlanetScale) are worth the cost. I use self-hosted Postgres for apps where losing the last hour of data wouldn't be catastrophic, and I have daily backup scripts to R2.
+
+**Uptime SLA.** A single VPS has no redundancy. If Hetzner's hardware fails or the datacenter has issues, you're down. For most indie projects this is acceptable. For anything where uptime is contractually required, you need a different approach.
+
+**Scaling.** A single VPS doesn't horizontally scale. If you suddenly need to handle 10x traffic, you're resizing the server (vertical scaling) or adding complexity. For 99% of projects, this is fine. For the 1% where it matters, you'll know when you get there.
+
+## Is it worth it?
+
+For me, absolutely. The cost savings are real (I'm saving roughly $100/month). The control is meaningful — I know exactly where my data lives and who has access to it. And the operational overhead, once you're set up, is genuinely low.
+
+The mental model shift that helped me most: **treat your VPS like a small piece of infrastructure, not like a fragile server you're babysitting**. Automate backups. Keep it patched. Put Cloudflare in front. Then stop worrying about it.
+
+If you're currently paying $50+/month on PaaS platforms and you're comfortable with a terminal, it's worth spending a weekend migrating. The economics speak for themselves.
