@@ -1,53 +1,53 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
 
-const featuredProjects = (await getCollection('projects'))
+const featuredProjects = (await getCollection("projects"))
   .filter((p) => p.data.featured)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 3);
 
-const latestPosts = (await getCollection('blog'))
+const latestPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 2);
 
 const stack = [
-  { label: 'n8n',           icon: '⚡' },
-  { label: 'Claude API',    icon: '🧠' },
-  { label: 'Docker',        icon: '🐳' },
-  { label: 'Coolify',       icon: '🚀' },
-  { label: 'Cloudflare',    icon: '☁️' },
-  { label: 'PostgreSQL',    icon: '🐘' },
-  { label: 'Redis',         icon: '🔴' },
-  { label: 'Next.js',       icon: '▲' },
-  { label: 'VPS/Ubuntu',    icon: '🖥️' },
-  { label: 'GitHub',        icon: '🐙' },
-  { label: 'WordPress',     icon: '📝' },
+  { label: "n8n", icon: "⚡" },
+  { label: "Claude API", icon: "🧠" },
+  { label: "Docker", icon: "🐳" },
+  { label: "Coolify", icon: "🚀" },
+  { label: "Cloudflare", icon: "☁️" },
+  { label: "PostgreSQL", icon: "🐘" },
+  { label: "Redis", icon: "🔴" },
+  { label: "Next.js", icon: "▲" },
+  { label: "VPS/Ubuntu", icon: "🖥️" },
+  { label: "GitHub", icon: "🐙" },
+  { label: "WordPress", icon: "📝" },
 ];
 
 const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Sudarshan Kotian',
-  alternateName: 'iamsukosan',
-  url: 'https://portfolio.iamsukosan.com',
-  email: 'iamsukosan@gmail.com',
-  jobTitle: 'AI Automation & DevOps Engineer',
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Sudarshan Kotian",
+  alternateName: "iamsukosan",
+  url: "https://portfolio.iamsukosan.com",
+  email: "iamsukosan@gmail.com",
+  jobTitle: "AI Automation & DevOps Engineer",
   sameAs: [
-    'https://github.com/iamsukosan',
-    'https://linkedin.com/in/iamsukosan',
-    'https://x.com/iamsukosan',
+    "https://github.com/iamsukosan",
+    "https://linkedin.com/in/iamsukosan",
+    "https://x.com/iamsukosan",
   ],
   knowsAbout: [
-    'AI Automation',
-    'DevOps',
-    'Docker',
-    'Cloudflare',
-    'n8n',
-    'Claude API',
-    'VPS Management',
-    'Infrastructure Engineering',
+    "AI Automation",
+    "DevOps",
+    "Docker",
+    "Cloudflare",
+    "n8n",
+    "Claude API",
+    "VPS Management",
+    "Infrastructure Engineering",
   ],
 };
 ---
@@ -85,7 +85,9 @@ const jsonLd = {
       <!-- Description -->
       <p class="hero-desc animate-fade-up animate-fade-up-d3">
         Building intelligent automation workflows and hardened infrastructure —
-        from AI-powered pipelines with <span class="text-accent">Claude API</span> and
+        from AI-powered pipelines with <span class="text-accent"
+          >Claude API</span
+        > and
         <span class="text-accent">n8n</span> to production-grade
         <span class="text-accent">Docker + Coolify</span> deployments and
         <span class="text-accent">Cloudflare</span> security layers.
@@ -95,8 +97,19 @@ const jsonLd = {
       <div class="hero-cta animate-fade-up animate-fade-up-d4">
         <a href="/projects" class="btn-primary">
           View my work
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M3 8H13M13 8L9 4M13 8L9 12"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
           </svg>
         </a>
         <a href="mailto:iamsukosan@gmail.com" class="btn-secondary">
@@ -108,9 +121,7 @@ const jsonLd = {
       <div class="stack-row animate-fade-up animate-fade-up-d5">
         <span class="stack-label">Stack:</span>
         <div class="stack-pills">
-          {stack.map((item) => (
-            <span class="stack-pill">{item.label}</span>
-          ))}
+          {stack.map((item) => <span class="stack-pill">{item.label}</span>)}
         </div>
       </div>
     </div>
@@ -128,43 +139,72 @@ const jsonLd = {
         </div>
         <a href="/projects" class="section-link">
           View all
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 7H12M12 7L8 3M12 7L8 11"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
           </svg>
         </a>
       </div>
 
       <div class="projects-grid">
-        {featuredProjects.map((project, i) => (
-          <a href={`/projects/${project.slug}`} class="project-card glass-card">
-            <div class="card-inner">
-              <div class="card-top">
-                <div class="card-tags">
-                  {project.data.tags.slice(0, 3).map((tag) => (
-                    <span class="tag">{tag}</span>
-                  ))}
+        {
+          featuredProjects.map((project, i) => (
+            <a href={`/projects/${project.id}`} class="project-card glass-card">
+              <div class="card-inner">
+                <div class="card-top">
+                  <div class="card-tags">
+                    {project.data.tags.slice(0, 3).map((tag) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </div>
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    class="card-arrow"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M4 16L16 4M16 4H7M16 4V13"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                 </div>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="card-arrow" aria-hidden="true">
-                  <path d="M4 16L16 4M16 4H7M16 4V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </div>
 
-              <div class="card-body">
-                <h3 class="card-title">{project.data.title}</h3>
-                <p class="card-desc">{project.data.description}</p>
-              </div>
+                <div class="card-body">
+                  <h3 class="card-title">{project.data.title}</h3>
+                  <p class="card-desc">{project.data.description}</p>
+                </div>
 
-              <div class="card-footer">
-                <time class="card-date">
-                  {project.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' })}
-                </time>
-                <span class={`card-status status-${project.data.status}`}>
-                  {project.data.status}
-                </span>
+                <div class="card-footer">
+                  <time class="card-date">
+                    {project.data.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                    })}
+                  </time>
+                  <span class={`card-status status-${project.data.status}`}>
+                    {project.data.status}
+                  </span>
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -181,34 +221,64 @@ const jsonLd = {
         </div>
         <a href="/blog" class="section-link">
           View all
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-            <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 14 14"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M2 7H12M12 7L8 3M12 7L8 11"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
           </svg>
         </a>
       </div>
 
       <div class="posts-list">
-        {latestPosts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="post-row glass-card">
-            <div class="post-row-inner">
-              <div class="post-row-meta">
-                <time class="post-date">
-                  {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                </time>
-                <div class="post-tags-mini">
-                  {post.data.tags.slice(0, 2).map((tag) => (
-                    <span class="tag">{tag}</span>
-                  ))}
+        {
+          latestPosts.map((post) => (
+            <a href={`/blog/${post.id}`} class="post-row glass-card">
+              <div class="post-row-inner">
+                <div class="post-row-meta">
+                  <time class="post-date">
+                    {post.data.date.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                  <div class="post-tags-mini">
+                    {post.data.tags.slice(0, 2).map((tag) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </div>
                 </div>
+                <h3 class="post-title">{post.data.title}</h3>
+                <p class="post-excerpt">{post.data.description}</p>
               </div>
-              <h3 class="post-title">{post.data.title}</h3>
-              <p class="post-excerpt">{post.data.description}</p>
-            </div>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" class="post-arrow" aria-hidden="true">
-              <path d="M4 16L16 4M16 4H7M16 4V13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-        ))}
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                class="post-arrow"
+                aria-hidden="true"
+              >
+                <path
+                  d="M4 16L16 4M16 4H7M16 4V13"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>
@@ -230,7 +300,12 @@ const jsonLd = {
             <a href="mailto:iamsukosan@gmail.com" class="btn-primary">
               iamsukosan@gmail.com
             </a>
-            <a href="https://linkedin.com/in/iamsukosan" target="_blank" rel="noopener noreferrer" class="btn-secondary">
+            <a
+              href="https://linkedin.com/in/iamsukosan"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-secondary"
+            >
               LinkedIn
             </a>
           </div>
@@ -238,6 +313,116 @@ const jsonLd = {
       </div>
     </div>
   </section>
+  <canvas id="tron-grid" aria-hidden="true"></canvas>
+  <script is:inline>
+    const GRID = 48;
+    const DASH_COUNT = 10;
+    const DASH_COLOR = "rgba(57, 255, 20,";
+    const LINE_COLOR = "rgba(57, 255, 20, 0.04)";
+
+    let W,
+      H,
+      dashes = [];
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + "px";
+      canvas.style.height = H + "px";
+      ctx.scale(dpr, dpr);
+    }
+
+    function randomDash() {
+      const horizontal = Math.random() > 0.5;
+      const col = Math.floor(Math.random() * (W / GRID));
+      const row = Math.floor(Math.random() * (H / GRID));
+      return {
+        horizontal,
+        x: horizontal ? 0 : Math.round(col * GRID),
+        y: horizontal ? Math.round(row * GRID) : 0,
+        length: GRID * (3 + Math.floor(Math.random() * 3)),
+        speed: 2 + Math.random() * 2,
+        opacity: 0.05 + Math.random() * 0.4,
+        size: 15 + Math.random() * 15,
+      };
+    }
+
+    function initDashes() {
+      dashes = Array.from({ length: DASH_COUNT }, randomDash);
+    }
+
+    function drawGrid() {
+      ctx.shadowColor = "#39ff14";
+      ctx.shadowBlur = 4;
+      ctx.strokeStyle = LINE_COLOR;
+      ctx.lineWidth = 1;
+      for (let x = 0; x < W; x += GRID) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, H);
+        ctx.stroke();
+      }
+      for (let y = 0; y < H; y += GRID) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(W, y);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function drawDashes() {
+      dashes.forEach((d, i) => {
+        ctx.save();
+        ctx.shadowColor = "#39ff14";
+        ctx.shadowBlur = 6;
+        ctx.strokeStyle = `${DASH_COLOR} ${d.opacity})`;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        if (d.horizontal) {
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + d.size, d.y);
+          d.x += d.speed;
+          if (d.x > W + d.length) dashes[i] = randomDash();
+        } else {
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x, d.y + d.size);
+          d.y += d.speed;
+          if (d.y > H + d.length) dashes[i] = randomDash();
+        }
+        ctx.stroke();
+        ctx.restore();
+      });
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      drawDashes();
+      animFrame = requestAnimationFrame(loop);
+    }
+
+    let animFrame;
+
+    function start() {
+      canvas = document.getElementById("tron-grid");
+      if (!canvas) return;
+      ctx = canvas.getContext("2d");
+      cancelAnimationFrame(animFrame);
+      resize();
+      initDashes();
+      loop();
+      window.addEventListener("resize", () => {
+        resize();
+        initDashes();
+      });
+    }
+
+    document.addEventListener("astro:page-load", start);
+    document.addEventListener("astro:after-swap", start);
+  </script>
 </BaseLayout>
 
 <style>
@@ -256,7 +441,11 @@ const jsonLd = {
     transform: translateX(-50%);
     width: 900px;
     height: 500px;
-    background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(57, 255, 20, 0.13) 0%, transparent 70%);
+    background: radial-gradient(
+      ellipse 60% 60% at 50% 0%,
+      rgba(57, 255, 20, 0.13) 0%,
+      transparent 70%
+    );
     pointer-events: none;
     animation: glowPulse 4s ease-in-out infinite;
   }
@@ -268,7 +457,7 @@ const jsonLd = {
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
-    max-width: 780px;
+    max-width: 1100px;
   }
 
   .status-badge {
@@ -307,7 +496,12 @@ const jsonLd = {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-image: linear-gradient(135deg, #39ff14 0%, #00ff88 60%, #00d4ff 100%);
+    background-image: linear-gradient(
+      135deg,
+      #39ff14 0%,
+      #00ff88 60%,
+      #00d4ff 100%
+    );
   }
 
   .hero-sub {
@@ -347,7 +541,10 @@ const jsonLd = {
     border-radius: 10px;
     text-decoration: none;
     box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
-    transition: box-shadow 0.25s ease, transform 0.2s ease, background 0.2s ease;
+    transition:
+      box-shadow 0.25s ease,
+      transform 0.2s ease,
+      background 0.2s ease;
   }
 
   .btn-primary:hover {
@@ -369,7 +566,10 @@ const jsonLd = {
     padding: 0.75rem 1.5rem;
     border-radius: 10px;
     text-decoration: none;
-    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease,
+      background 0.2s ease;
   }
 
   .btn-secondary:hover {
@@ -409,7 +609,9 @@ const jsonLd = {
     border: 1px solid rgba(255, 255, 255, 0.06);
     padding: 0.2rem 0.6rem;
     border-radius: 6px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .stack-pill:hover {
@@ -454,7 +656,9 @@ const jsonLd = {
     flex-shrink: 0;
   }
 
-  .section-link:hover { color: var(--accent-green); }
+  .section-link:hover {
+    color: var(--accent-green);
+  }
 
   /* ── PROJECTS ─────────────────────────────────── */
   .projects-section {
@@ -496,7 +700,9 @@ const jsonLd = {
   .card-arrow {
     color: var(--text-subtle);
     flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .project-card:hover .card-arrow {
@@ -504,7 +710,9 @@ const jsonLd = {
     transform: translate(2px, -2px);
   }
 
-  .card-body { flex: 1; }
+  .card-body {
+    flex: 1;
+  }
 
   .card-title {
     font-size: 1.1rem;
@@ -515,7 +723,9 @@ const jsonLd = {
     transition: color 0.2s ease;
   }
 
-  .project-card:hover .card-title { color: var(--accent-soft); }
+  .project-card:hover .card-title {
+    color: var(--accent-soft);
+  }
 
   .card-desc {
     font-size: 0.875rem;
@@ -575,7 +785,9 @@ const jsonLd = {
     padding: 1.5rem;
   }
 
-  .post-row-inner { flex: 1; }
+  .post-row-inner {
+    flex: 1;
+  }
 
   .post-row-meta {
     display: flex;
@@ -606,7 +818,9 @@ const jsonLd = {
     transition: color 0.2s ease;
   }
 
-  .post-row:hover .post-title { color: var(--accent-soft); }
+  .post-row:hover .post-title {
+    color: var(--accent-soft);
+  }
 
   .post-excerpt {
     font-size: 0.875rem;
@@ -617,7 +831,9 @@ const jsonLd = {
   .post-arrow {
     color: var(--text-subtle);
     flex-shrink: 0;
-    transition: color 0.2s ease, transform 0.2s ease;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
   }
 
   .post-row:hover .post-arrow {
@@ -652,7 +868,11 @@ const jsonLd = {
     right: -10%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(ellipse, rgba(57, 255, 20, 0.08) 0%, transparent 70%);
+    background: radial-gradient(
+      ellipse,
+      rgba(57, 255, 20, 0.08) 0%,
+      transparent 70%
+    );
     pointer-events: none;
   }
 
@@ -676,14 +896,29 @@ const jsonLd = {
     flex-wrap: wrap;
   }
 
-  .hide-mobile { display: inline; }
+  .hide-mobile {
+    display: inline;
+  }
 
   @media (max-width: 640px) {
-    .hide-mobile { display: none; }
-    .hero { padding-top: 110px; }
-    .hero-h1 { font-size: 2.4rem; }
-    .projects-grid { grid-template-columns: 1fr; }
-    .cta-card-inner { padding: 2rem 1.5rem; }
-    .section-header { align-items: flex-start; flex-direction: column; }
+    .hide-mobile {
+      display: none;
+    }
+    .hero {
+      padding-top: 110px;
+    }
+    .hero-h1 {
+      font-size: 2.4rem;
+    }
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+    .cta-card-inner {
+      padding: 2rem 1.5rem;
+    }
+    .section-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
   }
 </style>

@@ -36,18 +36,18 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
       </div>
 
       <!-- Featured -->
-      {featuredProjects.length > 0 && (
+      {featuredProjects.length > 0 &&
         <section class="project-section animate-fade-up animate-fade-up-d2">
           <h2 class="section-label">Featured</h2>
           <div class="projects-grid featured-grid">
-            {featuredProjects.map((project) => (
-              <a href={`/projects/${project.slug}`} class="project-card glass-card">
+            {featuredProjects.map((project) =>
+              <a href={`/projects/${project.id}`} class="project-card glass-card">
                 <div class="card-inner">
                   <div class="card-top">
                     <div class="card-tags">
-                      {project.data.tags.slice(0, 3).map((tag) => (
+                      {project.data.tags.slice(0, 3).map((tag: string) =>
                         <span class="tag">{tag}</span>
-                      ))}
+                      )}
                     </div>
                     <div class="card-badge">
                       <span class="featured-badge">Featured</span>
@@ -70,25 +70,25 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
                   </div>
                 </div>
               </a>
-            ))}
+            )}
           </div>
         </section>
-      )}
+      }
 
       <!-- Other projects -->
-      {otherProjects.length > 0 && (
+      {otherProjects.length > 0 &&
         <section class="project-section animate-fade-up animate-fade-up-d3">
           <h2 class="section-label">All projects</h2>
           <div class="projects-list">
-            {otherProjects.map((project) => (
-              <a href={`/projects/${project.slug}`} class="project-row glass-card">
+            {otherProjects.map((project) =>
+              <a href={`/projects/${project.id}`} class="project-row glass-card">
                 <div class="row-left">
                   <h3 class="row-title">{project.data.title}</h3>
                   <p class="row-desc">{project.data.description}</p>
                   <div class="row-tags">
-                    {project.data.tags.slice(0, 4).map((tag) => (
+                    {project.data.tags.slice(0, 4).map((tag: string) =>
                       <span class="tag">{tag}</span>
-                    ))}
+                    )}
                   </div>
                 </div>
                 <div class="row-right">
@@ -100,10 +100,10 @@ const allTags = [...new Set(allProjects.flatMap((p) => p.data.tags))].sort();
                   </svg>
                 </div>
               </a>
-            ))}
+            )}
           </div>
         </section>
-      )}
+      }
 
     </div>
   </main>

@@ -36,7 +36,7 @@ const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
       <!-- Post list -->
       <div class="posts-list animate-fade-up animate-fade-up-d2">
         {allPosts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="post-card glass-card">
+          <a href={`/blog/${post.id}`} class="post-card glass-card">
             <div class="post-card-inner">
               <div class="post-card-meta">
                 <time class="post-date" datetime={post.data.date.toISOString()}>

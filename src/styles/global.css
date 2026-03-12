@@ -22,9 +22,8 @@
 /* ============================================================
    TAILWIND DIRECTIVES
    ============================================================ */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+   @import "tailwindcss";
 
 /* ============================================================
    CSS CUSTOM PROPERTIES
@@ -331,3 +330,128 @@ code, pre, kbd, samp {
 ::view-transition-new(root) {
   animation: 0.25s ease both slide-from-right;
 }
+
+#tron-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#page-content {
+  position: relative;
+  z-index: 1;
+}
+/* ============================================================
+   TYPOGRAPHY FIX — paste this into src/styles/global.css
+   (after your existing @plugin "@tailwindcss/typography"; line)
+   ============================================================ */
+
+/* --- Prose custom properties (replaces tailwind.config typography key) --- */
+.prose {
+  --tw-prose-body: rgba(255, 255, 255, 0.75);
+  --tw-prose-headings: #ffffff;
+  --tw-prose-links: #39ff14;
+  --tw-prose-bold: #ffffff;
+  --tw-prose-counters: rgba(255, 255, 255, 0.55);
+  --tw-prose-bullets: rgba(57, 255, 20, 0.6);
+  --tw-prose-hr: rgba(255, 255, 255, 0.07);
+  --tw-prose-quotes: rgba(255, 255, 255, 0.75);
+  --tw-prose-quote-borders: rgba(57, 255, 20, 0.4);
+  --tw-prose-captions: rgba(255, 255, 255, 0.4);
+  --tw-prose-code: #39ff14;
+  --tw-prose-pre-code: rgba(255, 255, 255, 0.85);
+  --tw-prose-pre-bg: #071428;
+  --tw-prose-th-borders: rgba(255, 255, 255, 0.12);
+  --tw-prose-td-borders: rgba(255, 255, 255, 0.06);
+}
+
+/* --- Table fixes --- */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: 2rem 0;
+}
+
+.prose thead {
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.prose thead th {
+  color: #ffffff;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  background: rgba(57, 255, 20, 0.04);
+  border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+}
+
+.prose tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s ease;
+}
+
+.prose tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.prose tbody td {
+  padding: 0.75rem 1rem;
+  color: rgba(255, 255, 255, 0.75);
+  vertical-align: top;
+}
+
+.prose tbody td:first-child {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+/* --- Code block fixes --- */
+.prose pre {
+  background: #071428 !important;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  position: relative;
+}
+
+.prose pre code {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  font-family: var(--font-mono);
+  font-size: 0.83rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Inline code */
+.prose :not(pre) > code {
+  background: rgba(57, 255, 20, 0.08) !important;
+  border: 1px solid rgba(57, 255, 20, 0.18) !important;
+  color: #39ff14 !important;
+  padding: 0.15em 0.45em !important;
+  border-radius: 4px !important;
+  font-size: 0.83em !important;
+  font-family: var(--font-mono);
+}
+
+/* Shiki token colors — keep Shiki's own colors intact */
+.prose pre .line {
+  display: block;
+  min-height: 1.4em;
+}
+.prose pre {
+  line-height: 1.55;
+}
+@plugin "@tailwindcss/typography";
