@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ServicesSection from "../components/ServicesSection.astro";
+import ToolsSection from "../components/ToolsSection.astro";
 import { getCollection } from "astro:content";
 
 const featuredProjects = (await getCollection("projects"))
@@ -12,20 +13,6 @@ const latestPosts = (await getCollection("blog"))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
   .slice(0, 2);
-
-const stack = [
-  { label: "n8n", icon: "⚡" },
-  { label: "Claude API", icon: "🧠" },
-  { label: "Docker", icon: "🐳" },
-  { label: "Coolify", icon: "🚀" },
-  { label: "Cloudflare", icon: "☁️" },
-  { label: "PostgreSQL", icon: "🐘" },
-  { label: "Redis", icon: "🔴" },
-  { label: "Next.js", icon: "▲" },
-  { label: "VPS/Ubuntu", icon: "🖥️" },
-  { label: "GitHub", icon: "🐙" },
-  { label: "WordPress", icon: "📝" },
-];
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -117,14 +104,6 @@ const jsonLd = {
           Get in touch
         </a>
       </div>
-
-      <!-- Stack pills -->
-      <div class="stack-row animate-fade-up animate-fade-up-d5">
-        <span class="stack-label">Stack:</span>
-        <div class="stack-pills">
-          {stack.map((item) => <span class="stack-pill">{item.label}</span>)}
-        </div>
-      </div>
     </div>
   </section>
 
@@ -132,6 +111,11 @@ const jsonLd = {
        WHAT I DO — SERVICES + JOURNEY + VIBE CODING
        ================================================ -->
   <ServicesSection />
+
+  <!-- ================================================
+       TOOLS & STACK
+       ================================================ -->
+  <ToolsSection />
 
   <!-- ================================================
        FEATURED PROJECTS
@@ -304,7 +288,7 @@ const jsonLd = {
           </p>
           <div class="cta-buttons">
             <a href="mailto:iamsukosan@gmail.com" class="btn-primary">
-              iamsukosan@gmail.com
+              📧 Let’s Build Together
             </a>
             <a
               href="https://linkedin.com/in/iamsukosan"
@@ -582,47 +566,6 @@ const jsonLd = {
     color: var(--text-primary);
     border-color: rgba(255, 255, 255, 0.2);
     background: rgba(255, 255, 255, 0.04);
-  }
-
-  /* Stack pills */
-  .stack-row {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-  }
-
-  .stack-label {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--text-subtle);
-    letter-spacing: 0.08em;
-    flex-shrink: 0;
-  }
-
-  .stack-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .stack-pill {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--text-subtle);
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    padding: 0.2rem 0.6rem;
-    border-radius: 6px;
-    transition:
-      color 0.2s ease,
-      border-color 0.2s ease;
-  }
-
-  .stack-pill:hover {
-    color: var(--text-muted);
-    border-color: rgba(255, 255, 255, 0.12);
   }
 
   /* ── SECTION SHARED ────────────────────────────── */
