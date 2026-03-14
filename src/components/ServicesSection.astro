@@ -1,0 +1,286 @@
+---
+// src/components/ServicesSection.astro
+// "What I Do" — full-package services + journey bar + vibe coding note
+// Place between Hero and Featured Projects on the homepage.
+
+const services = [
+  {
+    num: "01",
+    title: "AI & Automation",
+    desc: "Intelligent workflows that replace manual processes — content pipelines, data processing, and multi-step automations that run without human intervention.",
+    tools: ["Claude API", "n8n", "Python"],
+  },
+  {
+    num: "02",
+    title: "Infrastructure & DevOps",
+    desc: "Production-grade server setups, containerized deployments, and security hardening — self-hosted stacks that replace expensive PaaS platforms.",
+    tools: ["Docker", "Coolify", "Cloudflare", "Linux"],
+  },
+  {
+    num: "03",
+    title: "Web & Content Systems",
+    desc: "High-performance websites, technical SEO architecture, and content systems — built for speed, ranking, and conversion from day one.",
+    tools: ["WordPress", "Astro", "Next.js", "SEO"],
+  },
+];
+
+const journey = [
+  "Content & SEO",
+  "WordPress & Web",
+  "Servers & Infra",
+  "AI & Automation",
+];
+---
+
+<section class="services-section">
+  <div class="section-container">
+
+    <!-- Journey progression bar -->
+    <div class="journey-bar">
+      {journey.map((step, i) => (
+        <>
+          <span class:list={["journey-step", { active: i === journey.length - 1 }]}>
+            {step}
+          </span>
+          {i < journey.length - 1 && (
+            <span class="journey-arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8H13M13 8L9.5 4.5M13 8L9.5 11.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          )}
+        </>
+      ))}
+    </div>
+
+    <!-- Section heading -->
+    <p class="section-eyebrow">What I do</p>
+    <h2 class="services-title">Full-stack delivery, not just one layer.</h2>
+    <p class="services-sub">
+      Most engineers specialize in one slice. I connect the entire chain — from content strategy 
+      to production infrastructure, with AI automation tying it all together.
+    </p>
+
+    <!-- Service cards -->
+    <div class="services-grid">
+      {services.map((svc) => (
+        <div class="service-card glass-card">
+          <div class="service-inner">
+            <span class="service-num">{svc.num}</span>
+            <h3 class="service-card-title">{svc.title}</h3>
+            <p class="service-desc">{svc.desc}</p>
+            <div class="service-tools">
+              {svc.tools.map((tool) => (
+                <span class="service-tag">{tool}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Vibe coding note -->
+    <div class="vibe-note glass-card">
+      <div class="vibe-inner">
+        <svg class="vibe-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z" stroke="var(--accent-green)" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round" />
+        </svg>
+        <p class="vibe-text">
+          <strong>I design the system. AI handles the syntax.</strong> Every project in 
+          my portfolio was built with AI as a co-pilot — architecting solutions, choosing the 
+          right tools, and shipping faster than traditional development allows.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ── SERVICES SECTION ──────────────────────────── */
+  .services-section {
+    padding: 1rem 0 3rem;
+  }
+
+  /* ── JOURNEY BAR ───────────────────────────────── */
+  .journey-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0.85rem 1.25rem;
+    border-radius: 12px;
+    background: var(--bg-s1);
+    border: 1px solid var(--border-default);
+    margin-bottom: 2.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .journey-bar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .journey-step {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--text-subtle);
+    white-space: nowrap;
+    transition: color 0.2s ease;
+  }
+
+  .journey-step.active {
+    color: var(--accent-green);
+    font-weight: 500;
+    text-shadow: 0 0 12px rgba(57, 255, 20, 0.4);
+  }
+
+  .journey-arrow {
+    display: flex;
+    align-items: center;
+    margin: 0 0.6rem;
+    color: var(--text-subtle);
+    flex-shrink: 0;
+  }
+
+  /* ── SECTION HEADING ───────────────────────────── */
+  /* .section-eyebrow is inherited from global/index styles */
+
+  .services-title {
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+  }
+
+  .services-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 56ch;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  /* ── SERVICE CARDS ─────────────────────────────── */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-card {
+    /* glass-card base from global.css handles bg, border, hover */
+  }
+
+  .service-inner {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    height: 100%;
+  }
+
+  .service-num {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--text-subtle);
+  }
+
+  .service-card-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+  }
+
+  .service-card:hover .service-card-title {
+    color: var(--accent-soft);
+  }
+
+  .service-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .service-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+  }
+
+  .service-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    color: var(--text-subtle);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .service-card:hover .service-tag {
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  /* ── VIBE CODING NOTE ──────────────────────────── */
+  .vibe-note {
+    /* glass-card base from global.css */
+  }
+
+  .vibe-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.15rem 1.35rem;
+  }
+
+  .vibe-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .vibe-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  .vibe-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* ── RESPONSIVE ────────────────────────────────── */
+  @media (max-width: 768px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .journey-bar {
+      padding: 0.75rem 1rem;
+    }
+
+    .journey-step {
+      font-size: 0.65rem;
+    }
+
+    .journey-arrow {
+      margin: 0 0.4rem;
+    }
+  }
+</style>

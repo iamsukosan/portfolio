@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import ServicesSection from "../components/ServicesSection.astro";
 import { getCollection } from "astro:content";
 
 const featuredProjects = (await getCollection("projects"))
@@ -126,6 +127,11 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  <!-- ================================================
+       WHAT I DO — SERVICES + JOURNEY + VIBE CODING
+       ================================================ -->
+  <ServicesSection />
 
   <!-- ================================================
        FEATURED PROJECTS
